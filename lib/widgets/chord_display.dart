@@ -61,7 +61,6 @@ class _ChordDisplayState extends State<ChordDisplay> {
       String chord = widget.chordSequence[i];
 
       if (chord == '|') {
-        // Add thick separator
         if (currentRow.isNotEmpty) {
           rows.add(Row(children: currentRow));
           currentRow = [];

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import '../chord_generator.dart';
 
 class SettingsForm extends StatefulWidget {
-  final Function(List<String> chords, int tempo) onSettingsChanged;
+  final Function(List<String> chords, int tempo, int timeSignature)
+      onSettingsChanged;
   final bool isPlaying;
   final int tempo;
 
@@ -22,6 +23,7 @@ class _SettingsFormState extends State<SettingsForm> {
   List<String> selectedKeys = [];
   String selectedProgression = 'Major ii-V-I';
   late int tempo;
+  int timeSignature = 4;
 
   final List<String> progressionTypes = [
     'Major ii-V-I',
@@ -38,7 +40,7 @@ class _SettingsFormState extends State<SettingsForm> {
   void _generateChords() {
     List<String> chords = ChordGenerator.generateProgression(
         selectedProgression, selectedKeys);
-    widget.onSettingsChanged(chords, tempo);
+    widget.onSettingsChanged(chords, tempo, timeSignature);
   }
 
   @override
@@ -74,6 +76,26 @@ class _SettingsFormState extends State<SettingsForm> {
             selectedKeys = keys;
           },
           selectedKeys: selectedKeys,
+        ),
+        SizedBox(height: 10),
+        Row(
+          children: [
+            Text('Time Signature: '),
+            DropdownButton<int>(
+              value: timeSignature,
+              items: [3, 4].map((int value) {
+                return DropdownMenuItem<int>(
+                  value: value,
+                  child: Text('$value/4'),
+                );
+              }).toList(),
+              onChanged: (int? newValue) {
+                setState(() {
+                  timeSignature = newValue!;
+                });
+              },
+            ),
+          ],
         ),
         SizedBox(height: 10),
         ElevatedButton(
@@ -140,7 +162,19 @@ class _KeySelectorState extends State<KeySelector> {
     'Ab',
     'A',
     'Bb',
-    'B'
+    'B',
+    'Cm',
+    'C#m',
+    'Dm',
+    'Ebm',
+    'Em',
+    'Fm',
+    'F#m',
+    'Gm',
+    'G#m',
+    'Am',
+    'Bbm',
+    'Bm',
   ];
 
   @override

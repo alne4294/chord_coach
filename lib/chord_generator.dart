@@ -17,8 +17,19 @@ class ChordGenerator {
   };
 
   static Map<String, List<String>> minorScaleDegrees = {
-    'Am': ['Am7', 'Bø', 'Cmaj7', 'Dm7', 'Em7', 'Fmaj7', 'G7'],
-    // Add more minor keys as needed
+    'Am': ['Am7', 'Bm7b5', 'Cmaj7', 'Dm7', 'Em7', 'Fmaj7', 'G7'],
+    'A#m': ['A#m7', 'B#m7b5', 'C#maj7', 'D#m7', 'E#m7', 'F#maj7', 'G#7'],
+    'Bm': ['Bm7', 'C#m7b5', 'Dmaj7', 'Em7', 'F#m7', 'Gmaj7', 'A7'],
+    'Cm': ['Cm7', 'Dm7b5', 'Ebmaj7', 'Fm7', 'Gm7', 'Abmaj7', 'Bb7'],
+    'C#m': ['C#m7', 'D#m7b5', 'Emaj7', 'F#m7', 'G#m7', 'Amaj7', 'B7'],
+    'Dm': ['Dm7', 'Em7b5', 'Fmaj7', 'Gm7', 'Am7', 'Bbmaj7', 'C7'],
+    'D#m': ['D#m7', 'E#m7b5', 'F#maj7', 'G#m7', 'A#m7', 'Bmaj7', 'C#7'],
+    'Em': ['Em7', 'F#m7b5', 'Gmaj7', 'Am7', 'Bm7', 'Cmaj7', 'D7'],
+    'Fm': ['Fm7', 'Gm7b5', 'Abmaj7', 'Bbm7', 'Cm7', 'Dbmaj7', 'Eb7'],
+    'F#m': ['F#m7', 'G#m7b5', 'Amaj7', 'Bm7', 'C#m7', 'Dmaj7', 'E7'],
+    'Gm': ['Gm7', 'Am7b5', 'Bbmaj7', 'Cm7', 'Dm7', 'Ebmaj7', 'F7'],
+    'G#m': ['G#m7', 'A#m7b5', 'Bmaj7', 'C#m7', 'D#m7', 'Emaj7', 'F#7'],
+    'Bbm': ['Bbm7', 'Cm7b5', 'Dbmaj7', 'Ebm7', 'Fm7', 'Gbmaj7', 'Ab7'],
   };
 
   static List<String> generateProgression(
@@ -36,9 +47,7 @@ class ChordGenerator {
           scale[0], // I
         ]);
       } else if (progressionType == 'minor ii-V-i') {
-        // Implement minor ii-V-i progression
-        // For simplicity, let's assume 'Am' for A minor, and so on
-        scale = minorScaleDegrees[key + 'm'];
+        scale = minorScaleDegrees[key];
         if (scale == null) continue;
         chords.addAll([
           scale[1], // iiø
@@ -48,11 +57,9 @@ class ChordGenerator {
       } else if (progressionType == 'Single Chord') {
         chords.add(key);
       }
-      // Add thick separator after each sequence
-      chords.add('|'); // We'll use '|' as a marker for thick separators
+      chords.add('|'); // Sequence separator
     }
 
-    // Remove the last separator
     if (chords.isNotEmpty && chords.last == '|') {
       chords.removeLast();
     }

@@ -28,18 +28,22 @@ class MetronomeHomePage extends StatefulWidget {
   _MetronomeHomePageState createState() => _MetronomeHomePageState();
 }
 
-class _MetronomeHomePageState extends State<MetronomeHomePage>
-    with SingleTickerProviderStateMixin {
+class _MetronomeHomePageState extends State<MetronomeHomePage> {
   List<String> chordSequence = [];
   int tempo = 80;
   bool isPlaying = false;
   int currentChordIndex = 0;
   late Metronome metronome;
+  int timeSignature = 4;
 
   @override
   void initState() {
     super.initState();
-    metronome = Metronome(onTick: _onTick, tickerProvider: this);
+    metronome = Metronome(
+      onTick: _onTick,
+      timeSignature: timeSignature,
+      tempo: tempo,
+    );
   }
 
   void _onTick() {
@@ -50,7 +54,7 @@ class _MetronomeHomePageState extends State<MetronomeHomePage>
 
   void _startMetronome() {
     if (chordSequence.isNotEmpty) {
-      metronome.start(tempo);
+      metronome.start();
       setState(() {
         isPlaying = true;
       });
@@ -65,11 +69,19 @@ class _MetronomeHomePageState extends State<MetronomeHomePage>
     });
   }
 
-  void _updateSettings(List<String> chords, int newTempo) {
+  void _updateSettings(
+      List<String> chords, int newTempo, int newTimeSignature) {
     setState(() {
       chordSequence = chords;
       tempo = newTempo;
+      timeSignature = newTimeSignature;
       currentChordIndex = 0;
+      metronome.dispose(); // Dispose old metronome
+      metronome = Metronome(
+        onTick: _onTick,
+        timeSignature: timeSignature,
+        tempo: tempo,
+      );
     });
   }
 
@@ -81,9 +93,6 @@ class _MetronomeHomePageState extends State<MetronomeHomePage>
 
   @override
   Widget build(BuildContext context) {
-    String currentChord =
-        chordSequence.isNotEmpty ? chordSequence[currentChordIndex] : '';
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Jazz Metronome'),
