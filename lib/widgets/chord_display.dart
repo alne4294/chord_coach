@@ -32,7 +32,7 @@ class _ChordDisplayState extends State<ChordDisplay> {
 
   void _scrollToCurrentChord() {
     _scrollController.animateTo(
-      widget.currentChordIndex * itemHeight,
+      (widget.currentChordIndex ~/ 6) * itemHeight,
       duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
@@ -44,24 +44,66 @@ class _ChordDisplayState extends State<ChordDisplay> {
       return Center(child: Text('No Chords to Display'));
     }
 
-    return ListView.builder(
+    return SingleChildScrollView(
       controller: _scrollController,
-      itemExtent: itemHeight,
-      itemCount: widget.chordSequence.length,
-      itemBuilder: (context, index) {
-        return Container(
-          color:
-              index == widget.currentChordIndex ? Colors.yellow : Colors.white,
-          child: ListTile(
-            title: Center(
-              child: Text(
-                widget.chordSequence[index],
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-          ),
-        );
-      },
+      child: Column(
+        children: _buildGrid(),
+      ),
     );
+  }
+
+  List<Widget> _buildGrid() {
+    List<Widget> rows = [];
+    List<Widget> currentRow = [];
+    int count = 0;
+
+    for (int i = 0; i < widget.chordSequence.length; i++) {
+      String chord = widget.chordSequence[i];
+
+      if (chord == '|') {
+        // Add thick separator
+        if (currentRow.isNotEmpty) {
+          rows.add(Row(children: currentRow));
+          currentRow = [];
+        }
+        rows.add(Divider(
+          color: Colors.black,
+          thickness: 2,
+        ));
+        count = 0;
+        continue;
+      }
+
+      Widget chordWidget = Expanded(
+        child: Container(
+          alignment: Alignment.center,
+          margin: EdgeInsets.all(2),
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: i == widget.currentChordIndex ? Colors.yellow : Colors.white,
+            border: Border.all(color: Colors.grey),
+          ),
+          child: Text(
+            chord,
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
+      );
+
+      currentRow.add(chordWidget);
+      count++;
+
+      if (count == 6) {
+        rows.add(Row(children: currentRow));
+        currentRow = [];
+        count = 0;
+      }
+    }
+
+    if (currentRow.isNotEmpty) {
+      rows.add(Row(children: currentRow));
+    }
+
+    return rows;
   }
 }

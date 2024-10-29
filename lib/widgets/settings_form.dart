@@ -19,9 +19,15 @@ class SettingsForm extends StatefulWidget {
 }
 
 class _SettingsFormState extends State<SettingsForm> {
-  List<String> selectedKeys = ['C', 'F', 'G'];
+  List<String> selectedKeys = [];
   String selectedProgression = 'Major ii-V-I';
   late int tempo;
+
+  final List<String> progressionTypes = [
+    'Major ii-V-I',
+    'minor ii-V-i',
+    'Single Chord',
+  ];
 
   @override
   void initState() {
@@ -44,6 +50,21 @@ class _SettingsFormState extends State<SettingsForm> {
           onTempoChanged: (value) {
             setState(() {
               tempo = value;
+            });
+          },
+        ),
+        SizedBox(height: 10),
+        DropdownButton<String>(
+          value: selectedProgression,
+          items: progressionTypes.map((String progression) {
+            return DropdownMenuItem<String>(
+              value: progression,
+              child: Text(progression),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            setState(() {
+              selectedProgression = newValue!;
             });
           },
         ),
